@@ -7,6 +7,8 @@ namespace PingTracker.Models
     {
         public int Id { get; set; }
         public long RTT {  get; set; }
+        [StringLength(40)]
+        public string Status { get; set; }
         public int WebsiteId { get; set; }
         public virtual List<Website>? Website { get; set; }
         [StringLength(255)]

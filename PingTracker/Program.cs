@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PingTracker.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PingTrackerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PingTrackerContext") ?? throw new InvalidOperationException("Connection string 'PingTrackerContext' not found.")));

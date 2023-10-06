@@ -12,11 +12,11 @@ namespace PingTracker.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WebsiteController : ControllerBase
+    public class WebsitesController : ControllerBase
     {
         private readonly PingTrackerContext _context;
 
-        public WebsiteController(PingTrackerContext context)
+        public WebsitesController(PingTrackerContext context)
         {
             _context = context;
         }
@@ -34,33 +34,33 @@ namespace PingTracker.Controllers
 
         // GET: api/Websites/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Website>> GetWebsites(int id)
+        public async Task<ActionResult<Website>> GetWebsite(int id)
         {
           if (_context.Websites == null)
           {
               return NotFound();
           }
-            var websites = await _context.Websites.FindAsync(id);
+            var website = await _context.Websites.FindAsync(id);
 
-            if (websites == null)
+            if (website == null)
             {
                 return NotFound();
             }
 
-            return websites;
+            return website;
         }
 
         // PUT: api/Websites/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutWebsites(int id, Website websites)
+        public async Task<IActionResult> PutWebsite(int id, Website website)
         {
-            if (id != websites.Id)
+            if (id != website.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(websites).State = EntityState.Modified;
+            _context.Entry(website).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace PingTracker.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!WebsitesExists(id))
+                if (!WebsiteExists(id))
                 {
                     return NotFound();
                 }
@@ -84,39 +84,39 @@ namespace PingTracker.Controllers
         // POST: api/Websites
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Website>> PostWebsites(Website websites)
+        public async Task<ActionResult<Website>> PostWebsite(Website website)
         {
           if (_context.Websites == null)
           {
               return Problem("Entity set 'PingTrackerContext.Websites'  is null.");
           }
-            _context.Websites.Add(websites);
+            _context.Websites.Add(website);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWebsites", new { id = websites.Id }, websites);
+            return CreatedAtAction("GetWebsite", new { id = website.Id }, website);
         }
 
         // DELETE: api/Websites/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteWebsites(int id)
+        public async Task<IActionResult> DeleteWebsite(int id)
         {
             if (_context.Websites == null)
             {
                 return NotFound();
             }
-            var websites = await _context.Websites.FindAsync(id);
-            if (websites == null)
+            var website = await _context.Websites.FindAsync(id);
+            if (website == null)
             {
                 return NotFound();
             }
 
-            _context.Websites.Remove(websites);
+            _context.Websites.Remove(website);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool WebsitesExists(int id)
+        private bool WebsiteExists(int id)
         {
             return (_context.Websites?.Any(e => e.Id == id)).GetValueOrDefault();
         }

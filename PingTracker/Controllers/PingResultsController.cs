@@ -97,10 +97,12 @@ namespace PingTracker.Controllers
             PingReply result = SendPing(PingWebste.URL.ToString());
             pingResult.Address = result.Address.ToString();
             pingResult.RTT = result.RoundtripTime;
+            pingResult.Status = result.Status.ToString();
+            pingResult.DateTime = DateTime.Now;
             
             _context.PingResults.Add(pingResult);
             await _context.SaveChangesAsync();
-
+            await UpdatePingAverage(pingResult.WebsiteId, pingResult.RTT);
             return CreatedAtAction("GetPingResult", new { id = pingResult.Id }, pingResult);
         }
 
@@ -135,15 +137,14 @@ namespace PingTracker.Controllers
             PingReply res = pinger.Send(URL);
             return res;
         }
-        private async Task<IActionResult> UpdatePingAverage(int id, long rtt)
+        private async Task UpdatePingAverage(int id, long rtt)
         {
-            if (id != _context.Websites.Where(x => x.Id == id).FirstOrDefaultAsync().Id)
-            {
-                return NotFound();
-            }
-            var pings =  _context.PingResults.Where(x => x.WebsiteId == id).Select(x => x.RTT).ToList();
+            var pings = await _context.PingResults.Where(x => x.WebsiteId == id).Select(x => x.RTT).ToListAsync();
             pings.Add(rtt);
-            var avg = pings.Average();
+            decimal avg = Convert.ToDecimal(pings.Average());
+            var sitePinged = await _context.Websites.FindAsync(id);
+            sitePinged.AveragePing = avg;
+            await _context.SaveChangesAsync();
         }
     }
 }
