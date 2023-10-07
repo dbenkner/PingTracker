@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.NetworkInformation;
+using System.Text.Json.Serialization;
 
 namespace PingTracker.Models
 {
@@ -10,7 +12,8 @@ namespace PingTracker.Models
         [StringLength(40)]
         public string Status { get; set; }
         public int WebsiteId { get; set; }
-        public virtual List<Website>? Website { get; set; }
+        [ForeignKey("WebsiteId")]
+        public virtual Website? Website { get; set; }
         [StringLength(255)]
         public string Address { get; set; } = string.Empty;
         public DateTime DateTime { get; set; } = DateTime.Now;

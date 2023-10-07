@@ -10,7 +10,7 @@ namespace PingTracker.Models
         public int Id { get; set; }
         [StringLength(250)]
         public string URL { get; set; } = string.Empty;
-        [Column(TypeName ="decimal(5,4)")]
+        [Column(TypeName ="decimal(10,3)")]
         public decimal? AveragePing { get; set; }
         
     }

@@ -5,7 +5,6 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using PingTracker.Data;
 using PingTracker.Models;
@@ -88,10 +87,10 @@ namespace PingTracker.Controllers
         [HttpPost]
         public async Task<ActionResult<PingResult>> PostPingResult(PingResult pingResult)
         {
-          if (_context.PingResults == null)
-          {
-              return Problem("Entity set 'PingTrackerContext.PingResults'  is null.");
-          }
+            if (_context.PingResults == null)
+            {
+                return Problem("Entity set 'PingTrackerContext.PingResults'  is null.");
+            }
             var PingWebste = await _context.Websites.Where(x => x.Id == pingResult.WebsiteId).SingleOrDefaultAsync();
             if (PingWebste == null) return BadRequest();
             PingReply result = SendPing(PingWebste.URL.ToString());
@@ -99,7 +98,7 @@ namespace PingTracker.Controllers
             pingResult.RTT = result.RoundtripTime;
             pingResult.Status = result.Status.ToString();
             pingResult.DateTime = DateTime.Now;
-            
+
             _context.PingResults.Add(pingResult);
             await _context.SaveChangesAsync();
             await UpdatePingAverage(pingResult.WebsiteId, pingResult.RTT);
@@ -126,7 +125,6 @@ namespace PingTracker.Controllers
             return NoContent();
         }
 
-
         private bool PingResultExists(int id)
         {
             return (_context.PingResults?.Any(e => e.Id == id)).GetValueOrDefault();
@@ -139,7 +137,7 @@ namespace PingTracker.Controllers
         }
         private async Task UpdatePingAverage(int id, long rtt)
         {
-            var pings = await _context.PingResults.Where(x => x.WebsiteId == id).Select(x => x.RTT).ToListAsync();
+            var pings = await _context.PingResults.Where(x => x.Id == id).Select(x => x.RTT).ToListAsync();
             pings.Add(rtt);
             decimal avg = Convert.ToDecimal(pings.Average());
             var sitePinged = await _context.Websites.FindAsync(id);

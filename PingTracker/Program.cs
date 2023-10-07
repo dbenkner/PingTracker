@@ -4,7 +4,7 @@ using PingTracker.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PingTrackerContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("PingTrackerContext") ?? throw new InvalidOperationException("Connection string 'PingTrackerContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DevDb") ?? throw new InvalidOperationException("Connection string 'PingTrackerContext' not found.")));
 
 // Add services to the container.
 
