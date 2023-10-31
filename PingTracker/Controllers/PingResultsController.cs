@@ -137,9 +137,7 @@ namespace PingTracker.Controllers
         }
         private async Task UpdatePingAverage(int id, long rtt)
         {
-            var pings = await _context.PingResults.Where(x => x.Id == id).Select(x => x.RTT).ToListAsync();
-            pings.Add(rtt);
-            decimal avg = Convert.ToDecimal(pings.Average());
+            decimal avg = Convert.ToDecimal(await _context.PingResults.Where(x => x.WebsiteId == id).AverageAsync(x => x.RTT));
             var sitePinged = await _context.Websites.FindAsync(id);
             sitePinged.AveragePing = avg;
             await _context.SaveChangesAsync();

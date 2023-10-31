@@ -10,7 +10,7 @@ namespace PingTracker.Models
         public int Id { get; set; }
         public long RTT {  get; set; }
         [StringLength(40)]
-        public string Status { get; set; }
+        public string Status { get; set; } = string.Empty;
         public int WebsiteId { get; set; }
         [ForeignKey("WebsiteId")]
         public virtual Website? Website { get; set; }
