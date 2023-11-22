@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PingTracker.Data;
+using PingTracker.DTO;
 using PingTracker.Models;
+using PingTracker.Server;
 
 namespace PingTracker.Controllers
 {
@@ -85,20 +87,17 @@ namespace PingTracker.Controllers
         // POST: api/PingResults
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PingResult>> PostPingResult(PingResult pingResult)
+        public async Task<ActionResult<PingResult>> PostPingResult(SendPingDto sendPingDto)
         {
             if (_context.PingResults == null)
             {
                 return Problem("Entity set 'PingTrackerContext.PingResults'  is null.");
             }
-            var PingWebste = await _context.Websites.Where(x => x.Id == pingResult.WebsiteId).SingleOrDefaultAsync();
+            var PingWebste = await _context.Websites.Where(x => x.Id == sendPingDto.WebsiteId).SingleOrDefaultAsync();
             if (PingWebste == null) return BadRequest();
-            PingReply result = SendPing(PingWebste.URL.ToString());
-            pingResult.Address = result.Address.ToString();
-            pingResult.RTT = result.RoundtripTime;
-            pingResult.Status = result.Status.ToString();
-            pingResult.DateTime = DateTime.Now;
 
+            PingResult pingResult = PingTrack.MakePing(sendPingDto.URL).Result;
+            pingResult.WebsiteId = sendPingDto.WebsiteId;
             _context.PingResults.Add(pingResult);
             await _context.SaveChangesAsync();
             await UpdatePingAverage(pingResult.WebsiteId, pingResult.RTT);
@@ -128,12 +127,6 @@ namespace PingTracker.Controllers
         private bool PingResultExists(int id)
         {
             return (_context.PingResults?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
-        private PingReply SendPing(string URL)
-        {
-            Ping pinger = new Ping();
-            PingReply res = pinger.Send(URL);
-            return res;
         }
         private async Task UpdatePingAverage(int id, long rtt)
         {

@@ -12,6 +12,5 @@ namespace PingTracker.Models
         public string URL { get; set; } = string.Empty;
         [Column(TypeName ="decimal(10,3)")]
         public decimal? AveragePing { get; set; }
-        
     }
 }
