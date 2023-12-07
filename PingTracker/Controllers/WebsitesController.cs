@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PingTracker.Data;
+using PingTracker.DTO;
 using PingTracker.Models;
 
 namespace PingTracker.Controllers
@@ -84,16 +85,17 @@ namespace PingTracker.Controllers
         // POST: api/Websites
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Website>> PostWebsite(Website website)
+        public async Task<ActionResult<Website>> PostWebsite(AddWebsiteDto website)
         {
           if (_context.Websites == null)
           {
               return Problem("Entity set 'PingTrackerContext.Websites'  is null.");
           }
-            _context.Websites.Add(website);
+            Website newWebsite = new Website() { URL = website.URL};
+            _context.Websites.Add(newWebsite);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWebsite", new { id = website.Id }, website);
+            return CreatedAtAction("GetWebsite", new { id = newWebsite.Id }, newWebsite);
         }
 
         // DELETE: api/Websites/5
