@@ -52,6 +52,21 @@ namespace PingTracker.Controllers
 
             return pingResult;
         }
+        //GET: api/PingResults/website/
+        [HttpGet("website/{id}")]
+        public async Task<ActionResult<IEnumerable<PingResult>>> GetPingResultsByWebsiteID(int id)
+        {
+            if (_context.PingResults == null)
+            {
+                return NotFound();
+            }
+            var results = await _context.PingResults.Where(x => x.WebsiteId == id).Include(x => x.Website).ToArrayAsync();
+            if (results.Count() == 0)
+            {
+                return BadRequest("No results found");
+            }
+            return results;
+        }
 
         // PUT: api/PingResults/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
