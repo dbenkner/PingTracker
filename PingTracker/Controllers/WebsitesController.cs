@@ -91,7 +91,7 @@ namespace PingTracker.Controllers
           {
               return Problem("Entity set 'PingTrackerContext.Websites'  is null.");
           }
-            Website newWebsite = new Website() { URL = website.URL};
+            Website newWebsite = new Website() { URL = website.URL, WebsiteNickname = website.WebsiteNickname};
             _context.Websites.Add(newWebsite);
             await _context.SaveChangesAsync();
 

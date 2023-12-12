@@ -2,6 +2,7 @@
 {
     public class AddWebsiteDto
     {
-        public string URL { get; set; }
+        public string URL { get; set; } = string.Empty;
+        public string? WebsiteNickname { get; set; }
     }
 }
