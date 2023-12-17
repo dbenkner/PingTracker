@@ -4,5 +4,6 @@
     {
         public string URL { get; set; } = string.Empty;
         public string? WebsiteNickname { get; set; }
+        public int UserId { get; set; }
     }
 }

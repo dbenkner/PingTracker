@@ -14,5 +14,7 @@ namespace PingTracker.Models
         public decimal? AveragePing { get; set; }
         [StringLength(250)]
         public string? WebsiteNickname { get; set; }
+        public int UserId { get; set; }
+        public virtual User? User { get; set; }
     }
 }

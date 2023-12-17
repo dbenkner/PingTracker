@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using PingTracker.Data;
 using PingTracker.DTO;
@@ -50,6 +51,18 @@ namespace PingTracker.Controllers
 
             return website;
         }
+        //GET: api/websites/userid/
+        [HttpGet("userid/{userid}")]
+        public async Task<ActionResult<IEnumerable<Website>>> GetWebsitesByUserId(int userId)
+        {
+            if (_context.Websites == null) return NotFound();
+            var websites = await _context.Websites.Where(w => w.UserId == userId).ToListAsync();
+            if (websites == null)
+            {
+                return NotFound();
+            }
+            return websites;
+        }
 
         // PUT: api/Websites/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -91,7 +104,7 @@ namespace PingTracker.Controllers
           {
               return Problem("Entity set 'PingTrackerContext.Websites'  is null.");
           }
-            Website newWebsite = new Website() { URL = website.URL, WebsiteNickname = website.WebsiteNickname};
+            Website newWebsite = new Website() { URL = website.URL, WebsiteNickname = website.WebsiteNickname, UserId = website.UserId};
             _context.Websites.Add(newWebsite);
             await _context.SaveChangesAsync();
 
