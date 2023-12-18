@@ -113,9 +113,10 @@ namespace PingTracker.Controllers
 
             PingResult pingResult = PingTrack.MakePing(sendPingDto.URL).Result;
             pingResult.WebsiteId = sendPingDto.WebsiteId;
+            pingResult.UserId = sendPingDto.UserId;
             _context.PingResults.Add(pingResult);
             await _context.SaveChangesAsync();
-            await UpdatePingAverage(pingResult.WebsiteId, pingResult.RTT);
+            await UpdatePingAverage(pingResult.WebsiteId, pingResult.RTT, pingResult.UserId);
             return CreatedAtAction("GetPingResult", new { id = pingResult.Id }, pingResult);
         }
 
@@ -143,9 +144,9 @@ namespace PingTracker.Controllers
         {
             return (_context.PingResults?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-        private async Task UpdatePingAverage(int id, long rtt)
+        private async Task UpdatePingAverage(int id, long rtt, int userId)
         {
-            decimal avg = Convert.ToDecimal(await _context.PingResults.Where(x => x.WebsiteId == id).AverageAsync(x => x.RTT));
+            decimal avg = Convert.ToDecimal(await _context.PingResults.Where(x => x.WebsiteId == id && x.UserId == userId).AverageAsync(x => x.RTT));
             var sitePinged = await _context.Websites.FindAsync(id);
             sitePinged.AveragePing = avg;
             await _context.SaveChangesAsync();

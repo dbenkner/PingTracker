@@ -17,6 +17,8 @@ namespace PingTracker.Models
         [StringLength(255)]
         public string Address { get; set; } = string.Empty;
         public DateTime DateTime { get; set; } = DateTime.Now;
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
         
     }
 }
