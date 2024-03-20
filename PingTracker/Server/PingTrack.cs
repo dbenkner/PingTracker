@@ -2,6 +2,7 @@
 using PingTracker.Models;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 
 
 namespace PingTracker.Server
@@ -12,9 +13,13 @@ namespace PingTracker.Server
         public static async Task<PingResult> MakePing(string url)
         {
             Ping pinger = new Ping();
+            PingOptions pingerOptions = new PingOptions();
+            string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+            byte[] buffer = Encoding.ASCII.GetBytes(data);
+            int timeout = 120;
             try
             {
-                PingReply rep = await pinger.SendPingAsync(url);
+                PingReply rep = await pinger.SendPingAsync(url, timeout, buffer, pingerOptions);
                 PingResult res = new PingResult
                 {
                     Address = rep.Address.ToString(),
