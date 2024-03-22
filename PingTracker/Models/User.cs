@@ -16,6 +16,7 @@ namespace PingTracker.Models
         [StringLength(255)]
         public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
         [JsonIgnore]
-        public byte[] PasswordSalt { get; set; } = Array.Empty<Byte>();
+        public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
+
     }
 }

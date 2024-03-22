@@ -119,7 +119,20 @@ namespace PingTracker.Controllers
             await UpdatePingAverage(pingResult.WebsiteId, pingResult.RTT, pingResult.UserId);
             return CreatedAtAction("GetPingResult", new { id = pingResult.Id }, pingResult);
         }
-
+        [HttpPost("trace/{websiteId}")]
+        public async Task<ActionResult<TraceResult>> PostTraceResult(int websiteId)
+        {
+            if(websiteId == 0) return BadRequest();
+            var webSite = await _context.Websites.Where(x => x.Id ==  websiteId).SingleOrDefaultAsync();
+            if (webSite == null) return BadRequest();
+            TraceResult traceResult = PingTrack.TraceRoute(webSite.URL).Result;
+            traceResult.websiteId = webSite.Id;
+            foreach(var line in traceResult.traceLines)
+            {
+                line.traceResultId = traceResult.id;
+            }
+            return traceResult;
+        }
         // DELETE: api/PingResults/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePingResult(int id)

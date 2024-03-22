@@ -17,5 +17,7 @@ namespace PingTracker.Data
         public DbSet<PingTracker.Models.Website> Websites { get; set; } = default!;
         public DbSet<User>Users { get; set; } = default!;
         public DbSet<PingResult> PingResults { get; set; }
+        public DbSet<TraceResult> TraceResults { get; set; } = default!;
+        public DbSet<TraceLine> TraceLines { get; set; } = default!;
     }
 }
